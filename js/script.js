@@ -1,9 +1,127 @@
-class Colors {
-  static cell = "rgb(24, 24, 37)"; //#181825
-  static cellBorder = "rgb(34, 39, 56)"; //#222738
-  static snake = "rgb(255, 255, 255)"; //#fff
-  static food = "rgb(170, 68, 68)"; //#a44
+class Themes {
+  static availableThemes = () => [
+    Themes.modern,
+    Themes.monochrome,
+    Themes.retro,
+    Themes.blackAndWhite,
+    Themes.funny,
+    Themes.glass,
+  ];
+
+  static modern = {
+    cell: "rgb(24, 24, 37)",
+    cellBorder: "rgb(34, 39, 56)",
+    snake: "rgb(255, 255, 255)",
+    snakeBorder: "rgb(255, 255, 255)",
+    food: "rgb(170, 68, 68)",
+    foodBorder: "rgb(170, 68, 68)",
+    info: "rgb(221, 221, 221)",
+    infoShadow: "rgb(24, 24, 37)",
+    background: "rgb(34, 39, 56)",
+  };
+
+  static monochrome = {
+    cell: "rgb(0, 0, 0)",
+    cellBorder: "rgb(0, 255, 0)",
+    snake: "rgb(0, 255, 0)",
+    snakeBorder: "rgb(0, 255, 0)",
+    food: "rgb(0, 254, 0)",
+    foodBorder: "rgb(0, 254, 0)",
+    info: "rgb(0, 255, 0)",
+    infoShadow: "rgb(0, 30, 0)",
+    background: "rgb(0, 0, 0)",
+  };
+
+  static retro = {
+    cell: "rgb(0, 0, 0)",
+    cellBorder: "rgb(0, 0, 0)",
+    snake: "rgb(0, 255, 0)",
+    snakeBorder: "rgb(0, 0, 0)",
+    food: "rgb(255, 0, 0)",
+    foodBorder: "rgb(255, 0, 0)",
+    info: "rgb(221, 221, 221)",
+    infoShadow: "rgb(0, 60, 0)",
+    background: "rgb(0, 60, 0)",
+  };
+
+  static blackAndWhite = {
+    cell: "rgb(90, 90, 90)",
+    cellBorder: "rgb(90, 90, 90)",
+    snake: "rgb(30, 30, 30)",
+    snakeBorder: "rgb(30, 30, 30)",
+    food: "rgb(180, 180, 180)",
+    foodBorder: "rgb(180, 180, 180)",
+    info: "rgb(180, 180, 180)",
+    infoShadow: "rgb(30, 30, 30)",
+    background: "rgb(20, 20, 20)",
+  };
+
+  static funny = {
+    cell: "rgb(120, 200, 68)",
+    cellBorder: "rgb(140, 200, 68)",
+    snake: "rgb(30, 80, 220)",
+    snakeBorder: "rgb(30, 80, 220)",
+    food: "rgb(240, 68, 68)",
+    foodBorder: "rgb(240, 68, 68)",
+    info: "rgb(221, 221, 221)",
+    infoShadow: "rgb(30, 130, 150)",
+    background: "rgb(30, 130, 150)",
+  };
+
+  static glass = {
+    cell: "rgb(30, 200, 200)",
+    cellBorder: "rgb(30, 190, 190)",
+    snake: "rgb(221, 221, 221)",
+    snakeBorder: "rgb(20, 20, 20)",
+    food: "rgb(200, 80, 120)",
+    foodBorder: "rgb(20, 20, 20)",
+    info: "rgb(30, 150, 150)",
+    infoShadow: "rgb(221, 221, 221)",
+    background: "rgb(221, 221, 221)",
+  };
 }
+
+//define theme
+const defineTheme = () => {
+  if (localStorage.getItem("snake-game-theme-index") !== null) {
+    const nextThemeIndex = localStorage.getItem("snake-game-theme-index");
+    currentTheme = Themes.availableThemes()[nextThemeIndex];
+  }
+
+  console.log("currentTheme: ");
+  console.log(currentTheme);
+};
+
+const MOVE_AWAIT_TIME = 120; //in milliseconds
+
+let cells = 20,
+  cellSize = 20,
+  map = [],
+  gameOver = false,
+  currentTheme = Themes.modern;
+
+defineTheme();
+
+class Colors {
+  static cell = currentTheme["cell"];
+  static cellBorder = currentTheme["cellBorder"];
+  static snake = currentTheme["snake"];
+  static snakeBorder = currentTheme["snakeBorder"];
+  static food = currentTheme["food"];
+  static foodBorder = currentTheme["foodBorder"];
+  static info = currentTheme["info"];
+  static infoShadow = currentTheme["infoShadow"];
+  static background = currentTheme["background"];
+}
+
+//set initial style colors with Colors class
+document.querySelector(".game-background").style.backgroundColor =
+  Colors.background;
+
+document.querySelectorAll(".info").forEach((e) => {
+  e.style.color = Colors.info;
+  e.style.textShadow = `5px 5px 2px ${Colors.infoShadow}`;
+});
 
 class Position {
   constructor(x, y, cell) {
@@ -32,7 +150,7 @@ class Snake {
 
   createNewPosition = (position) => {
     position.cell.style.backgroundColor = Colors.snake;
-    position.cell.style.borderColor = Colors.snake;
+    position.cell.style.borderColor = Colors.snakeBorder;
     this.positions = [...this.positions, position];
   };
 
@@ -54,12 +172,10 @@ if (localStorage.getItem("snake-game-best-score") !== null) {
 const originalStyle = {
   restartButton: restartButton.style,
 };
-const MOVE_AWAIT_TIME = 150; //in milliseconds
 
-let cells = 20,
-  cellSize = 20,
-  map = [],
-  gameOver = false;
+const gameBoard = document.querySelector(".game-board");
+gameBoard.style.maxWidth = `${cells * cellSize}px`;
+gameBoard.style.maxHeight = `${cells * cellSize}px`;
 
 const addEvent = (element, evnt, funct) => {
   if (element.attachEvent) return element.attachEvent("on" + evnt, funct);
@@ -82,6 +198,40 @@ const createFood = () => {
   }
 
   newFoodPosition.cell.style.backgroundColor = Colors.food;
+  newFoodPosition.cell.style.borderColor = Colors.foodBorder;
+};
+
+//handle keydown
+const keydownHandler = (event) => {
+  switch (event.key) {
+    default:
+      switchDirection(event);
+      return;
+  }
+};
+
+//handle keyup
+const keyupHandler = (event) => {
+  switch (event.key) {
+    case " ":
+      changeTheme(event);
+      break;
+    default:
+      return;
+  }
+};
+
+//change theme
+const changeTheme = () => {
+  const themes = Themes.availableThemes();
+  let nextThemeIndex = themes.indexOf(currentTheme) + 1;
+
+  if (nextThemeIndex === themes.length) {
+    nextThemeIndex = 0;
+  }
+
+  localStorage.setItem("snake-game-theme-index", nextThemeIndex);
+  restartGame();
 };
 
 //control snake direction
@@ -166,22 +316,9 @@ const play = () => {
   }
 };
 
-//remove food and snake positions
-const clearPositions = () => {
-  map.forEach((position) => {
-    position.cell.style.backgroundColor = Colors.cell;
-    position.cell.style.borderColor = Colors.cellBorder;
-  });
-};
-
-//setup a new game
+//restart game refreshing the page
 const restartGame = () => {
-  restartButton.style = originalStyle.restartButton;
-  currentScore.innerHTML = 0;
-  clearPositions();
-  createFood();
-  snake = new Snake([getPosition(9, 10)]);
-  loop = setInterval(play, MOVE_AWAIT_TIME);
+  window.location.reload();
 };
 
 //creating cells and positions, then adding positions to map
@@ -208,5 +345,6 @@ let loop = setInterval(play, MOVE_AWAIT_TIME);
 //adding listener to restart button to restart game
 addEvent(restartButton, "click", restartGame);
 
-//adding listener on keydown to control snake direction
-document.addEventListener("keydown", switchDirection);
+//adding listener on keydown and keyup
+document.addEventListener("keydown", keydownHandler);
+document.addEventListener("keyup", keyupHandler);

@@ -7,7 +7,6 @@
 .game-background {
   width: 100vw;
   height: 100vh;
-  background-color: #222738;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,8 +14,6 @@
 }
 
 .game-board {
-  max-width: 400px;
-  max-height: 400px;
   line-height: 0px;
   margin-top: 50px;
   margin-bottom: 50px;
@@ -24,8 +21,6 @@
 
 .info {
   font-size: 20px;
-  color: #ddd;
-  text-shadow: 5px 5px 2px #181825;
 }
 
 .score {
@@ -34,10 +29,13 @@
   width: 100%;
   max-width: 400px;
   justify-content: space-between;
-  padding-bottom: 10px;
 }
 
 #restart {
   padding-top: 40px;
   display: none;
+}
+
+.line {
+  padding-bottom: 10px;
 }
