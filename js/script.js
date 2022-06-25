@@ -97,7 +97,6 @@ const MOVE_AWAIT_TIME = 120; //in milliseconds
 let cells = 20,
   cellSize = 20,
   map = [],
-  gameOver = false,
   currentTheme = Themes.modern;
 
 defineTheme();
@@ -301,7 +300,6 @@ const play = () => {
   snake.createNewPosition(newPosition);
 
   if (hitItself) {
-    gameOver = true;
     if (+currentScore.innerHTML > +bestScore.innerHTML) {
       bestScore.innerHTML = currentScore.innerHTML;
       localStorage.setItem("snake-game-best-score", bestScore.innerHTML);
