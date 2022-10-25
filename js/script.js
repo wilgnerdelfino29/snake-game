@@ -168,10 +168,6 @@ if (localStorage.getItem("snake-game-best-score") !== null) {
   bestScore.innerHTML = localStorage.getItem("snake-game-best-score");
 }
 
-const originalStyle = {
-  restartButton: restartButton.style,
-};
-
 const gameBoard = document.querySelector(".game-board");
 gameBoard.style.maxWidth = `${cells * cellSize}px`;
 gameBoard.style.maxHeight = `${cells * cellSize}px`;
