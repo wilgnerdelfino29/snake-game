@@ -92,7 +92,7 @@ const defineTheme = () => {
   console.log(currentTheme);
 };
 
-const MOVE_AWAIT_TIME = 120; //in milliseconds
+const MOVE_AWAIT_TIME = 160; //in milliseconds
 
 let cells = 20,
   cellSize = 20,
@@ -252,6 +252,8 @@ const switchDirection = (event) => {
     default:
       return;
   }
+
+  play();
 };
 
 //move snake, test if got food and if snake hit itself
@@ -330,8 +332,8 @@ for (let i = 0; i < cells; i++) {
 }
 
 //defining food and player
-createFood();
 let snake = new Snake([getPosition(9, 10)]);
+createFood();
 
 //starting play loop
 let loop = setInterval(play, MOVE_AWAIT_TIME);
